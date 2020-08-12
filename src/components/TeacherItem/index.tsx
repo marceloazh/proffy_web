@@ -3,33 +3,54 @@ import React from 'react';
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg'
 
 import './styles.css';
+import api from '../../services/api';
 
-function TeacherItem() {
+export interface Teacher {
+    id: number;
+    avatar: string;
+    bio: string;
+    cost: number;
+    name: string;
+    subject: string;
+    whatsapp: string;
+}
+
+interface TeacherItemProps {
+    teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+    function createNewConnection() {
+        api.post('connections', {
+            user_id: teacher.id,
+        });
+    }
+
     return (
         <article className="teacher-item">
             <header>
-                <img src="https://scontent.fbfh3-2.fna.fbcdn.net/v/t1.0-1/p160x160/70408840_1618733508257043_6810011440578035712_n.jpg?_nc_cat=109&_nc_sid=dbb9e7&_nc_ohc=8wpyGBlTAssAX-CU9Xt&_nc_ht=scontent.fbfh3-2.fna&tp=-6&oh=654e3b47bdea3147b1f91e7996365654&oe=5F54453E" alt="Marcelo Porto" />
+                <img src={teacher.avatar} alt={teacher.name} />
                 <div>
-                    <strong>Marcelo Porto</strong>
-                    <span>História</span>
+                    <strong>{teacher.name}</strong>
+                    <span>{teacher.subject}</span>
                 </div>
             </header>
 
-            <p>
-                Entusiasta de história mundial e medieval.
-                    <br /><br />
-                    Apaixonado por todos os detalhes mais sórdidos da história, incluíndo aqueles que ninguém se importa. A história do Brasil é estranha e me confunde...
-                    </p>
+            <p>{teacher.bio}</p>
 
             <footer>
                 <p>
                     Preço/hora
-                            <strong>R$100,00</strong>
+                            <strong>{teacher.cost}</strong>
                 </p>
-                <button type="button">
+                <a 
+                    target="_blank" 
+                    onClick={createNewConnection}
+                    href={`https://wa.me/${teacher.whatsapp}`}
+                >
                     <img src={whatsappIcon} alt="Whatsapp" />
-                            Entrar em Contato
-                        </button>
+                    Entrar em Contato
+                </a>
             </footer>
         </article>
     );
